@@ -16,7 +16,7 @@ function getSql(): NeonQueryFunction<false, false> {
 }
 
 // Tagged template literal proxy
-const sql = new Proxy({} as NeonQueryFunction<false, false>, {
+const sql = new Proxy((() => {}) as unknown as NeonQueryFunction<false, false>, {
   apply(_target, _thisArg, args) {
     const fn = getSql();
     return (fn as any)(...args);
