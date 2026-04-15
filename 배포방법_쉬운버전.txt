@@ -1,0 +1,105 @@
+================================================================================
+   foodbreeze.vercel.app 만들기 — 아주 쉬운 버전
+================================================================================
+
+준비물: 크롬 브라우저, 이메일 주소 하나
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1단계  GitHub Desktop 설치 (코드 업로드 도구)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+① 크롬에서 검색: "GitHub Desktop 다운로드"
+   → desktop.github.com 접속 → [Download for Windows] 클릭
+
+② 설치 후 실행 → [Sign in to GitHub.com] 클릭
+   → GitHub 계정 없으면 [Create your free account] 눌러서 가입 (이메일만 있으면 됨)
+   → 로그인 완료
+
+③ GitHub Desktop 메인 화면에서:
+   [File] → [Add Local Repository] 클릭
+   → [Choose...] → C:\Users\USER\Desktop\HRtest\hrapp 폴더 선택
+   → [Add Repository] 클릭
+
+④ 왼쪽에 변경된 파일들이 보이면:
+   아래쪽 Summary 칸에 입력: 첫배포
+   → [Commit to main] 클릭
+   → 오른쪽 위 [Publish repository] 클릭
+   → Name: foodbreeze-hr 확인 → [Publish Repository] 클릭
+
+✅ 완료! GitHub에 코드가 올라갔습니다.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 2단계  Neon 데이터베이스 만들기 (데이터 저장소)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+① 크롬에서 neon.tech 접속
+   → [Sign up] → [Continue with GitHub] 클릭 (방금 만든 GitHub 계정 사용)
+
+② 로그인 되면 [Create a project] 클릭
+   → Project name: foodbreeze-hr 입력
+   → Region: AWS / Asia Pacific (Singapore) 선택
+   → [Create project] 클릭
+
+③ 화면에 연결 주소가 나옵니다.
+   [Connection string] 탭 클릭 → 드롭다운에서 [.env] 선택
+   → 이런 글자가 보입니다:
+   DATABASE_URL=postgresql://...
+
+   → 오른쪽 복사 버튼 클릭 (전체 복사됨)
+   → 메모장에 붙여넣기 해두세요 (나중에 씁니다)
+
+✅ 완료! 데이터베이스 주소를 복사했습니다.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 3단계  Vercel 배포 (웹사이트 올리기)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+① 크롬에서 vercel.com 접속
+   → [Sign Up] → [Continue with GitHub] 클릭
+
+② 로그인 후 [Add New...] → [Project] 클릭
+   → GitHub 저장소 목록에서 [foodbreeze-hr] 찾기
+   → [Import] 클릭
+
+③ 설정 화면에서:
+   - Project Name 칸에: foodbreeze  ← 이게 주소가 됩니다
+
+④ 아래로 스크롤해서 [Environment Variables] 찾기
+   → 첫 번째 줄:
+      NAME  칸: DATABASE_URL
+      VALUE 칸: (2단계에서 메모장에 붙여둔 postgresql://... 전체 붙여넣기)
+      [Add] 클릭
+
+   → 두 번째 줄:
+      NAME  칸: SESSION_SECRET
+      VALUE 칸: foodbreeze-hr-secret-2024
+      [Add] 클릭
+
+⑤ [Deploy] 버튼 클릭!
+   → 2~3분 기다리기
+   → "Congratulations!" 화면 나오면 성공!
+
+✅ 완료! 웹사이트가 만들어졌습니다.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 4단계  데이터베이스 초기화 (딱 1번만!)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+① 크롬에서 이 주소 입력:
+   https://foodbreeze.vercel.app/api/setup
+
+② 화면에 success: true 글자가 나오면 완료!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 🎉 완성!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+주소: https://foodbreeze.vercel.app
+아이디: admin
+비밀번호: admin1234
+
+스마트폰에서도 위 주소로 접속 가능!
+
+================================================================================
+막히는 곳 있으면 Claude에게 "몇 단계에서 막혔어" 라고 말씀해주세요!
+================================================================================
