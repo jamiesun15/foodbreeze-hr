@@ -2,7 +2,7 @@
 // 브라우저에서 /api/setup 주소를 열면 테이블이 자동으로 생성됩니다.
 import { NextResponse } from 'next/server';
 import sql from '@/lib/db';
-import bcrypt from 'bcryptjs';
+import { hash as bcryptHash } from 'bcryptjs';
 
 export async function GET() {
   try {
@@ -123,7 +123,7 @@ export async function GET() {
     // 관리자 계정 생성 (없을 경우에만)
     const existing = await sql`SELECT id FROM users WHERE username = 'admin'`;
     if (existing.length === 0) {
-      const hash = await bcrypt.hash('admin1234', 10);
+      const hash = await bcryptHash('admin1234', 10);
       await sql`
         INSERT INTO users (username, password_hash, role)
         VALUES ('admin', ${hash}, 'admin')

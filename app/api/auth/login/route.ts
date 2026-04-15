@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { getIronSession } from 'iron-session';
 import { SessionData, sessionOptions } from '@/lib/session';
 import sql from '@/lib/db';
-import bcrypt from 'bcryptjs';
+import { compare } from 'bcryptjs';
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const rows = await sql`SELECT * FROM users WHERE username = ${username}`;
     const user = rows[0] as any;
 
-    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+    if (!user || !(await compare(password, user.password_hash))) {
       return NextResponse.json({ error: '아이디 또는 비밀번호가 올바르지 않습니다.' }, { status: 401 });
     }
 
