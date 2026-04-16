@@ -68,37 +68,38 @@ export default function AttendancePage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">출퇴근 관리</h1>
-          <p className="text-gray-500 text-sm mt-1">기본 근무시간: 09:00 ~ 15:00</p>
-        </div>
+      {/* 헤더 */}
+      <div className="mb-4">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-800">출퇴근 관리</h1>
+        <p className="text-gray-500 text-xs md:text-sm mt-1">기본 근무시간: 09:00 ~ 15:00</p>
+      </div>
 
-        {/* 출퇴근 버튼 */}
-        <div className="flex gap-3">
-          <button onClick={handleCheckIn} disabled={!!todayRecord?.check_in}
-            className="bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
-            ✅ 출근 체크
-          </button>
-          <button onClick={handleCheckOut} disabled={!todayRecord?.check_in || !!todayRecord?.check_out}
-            className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
-            🏃 퇴근 체크
-          </button>
-        </div>
+      {/* 출퇴근 버튼 - 모바일에서 크게 */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <button onClick={handleCheckIn} disabled={!!todayRecord?.check_in}
+          className="bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white px-4 py-4 md:py-2.5 rounded-xl text-base md:text-sm font-bold transition">
+          출근
+        </button>
+        <button onClick={handleCheckOut} disabled={!todayRecord?.check_in || !!todayRecord?.check_out}
+          className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-4 py-4 md:py-2.5 rounded-xl text-base md:text-sm font-bold transition">
+          퇴근
+        </button>
       </div>
 
       {/* 오늘 상태 */}
       {todayRecord && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center gap-6 text-sm">
-          <span className="text-green-700 font-medium">오늘 ({todayStr})</span>
-          <span>출근: <strong className="text-green-600">{todayRecord.check_in || '미체크'}</strong></span>
-          <span>퇴근: <strong className="text-blue-600">{todayRecord.check_out || '미체크'}</strong></span>
-          {todayRecord.work_hours ? <span>근무시간: <strong>{todayRecord.work_hours}시간</strong></span> : null}
+        <div className="bg-green-50 border border-green-200 rounded-xl p-3 md:p-4 mb-4 text-sm">
+          <p className="text-green-700 font-medium mb-1">오늘 ({todayStr})</p>
+          <div className="flex gap-4 flex-wrap">
+            <span>출근: <strong className="text-green-600">{todayRecord.check_in || '미체크'}</strong></span>
+            <span>퇴근: <strong className="text-blue-600">{todayRecord.check_out || '미체크'}</strong></span>
+            {todayRecord.work_hours ? <span>근무: <strong>{todayRecord.work_hours}h</strong></span> : null}
+          </div>
         </div>
       )}
 
       {/* 필터 */}
-      <div className="flex gap-3 mb-4 flex-wrap">
+      <div className="flex gap-2 mb-3 flex-wrap">
         <select value={year} onChange={e => setYear(e.target.value)}
           className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400">
           {[2024, 2025, 2026].map(y => <option key={y} value={y}>{y}년</option>)}
@@ -119,13 +120,44 @@ export default function AttendancePage() {
       </div>
 
       {/* 요약 */}
-      <div className="flex gap-4 mb-4 text-sm text-gray-600">
-        <span>총 {records.length}일 기록</span>
-        <span>총 근무시간: <strong>{totalHours.toFixed(1)}시간</strong></span>
+      <div className="flex gap-4 mb-3 text-sm text-gray-600">
+        <span>총 {records.length}일</span>
+        <span>근무시간: <strong>{totalHours.toFixed(1)}h</strong></span>
       </div>
 
-      {/* 테이블 */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* 모바일: 카드 / 데스크탑: 테이블 */}
+      {/* 모바일 카드 뷰 */}
+      <div className="md:hidden space-y-2">
+        {loading ? (
+          <div className="text-center py-12 text-gray-400">불러오는 중...</div>
+        ) : records.length === 0 ? (
+          <div className="text-center py-12 text-gray-400">기록이 없습니다.</div>
+        ) : records.map((r: any) => (
+          <div key={r.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-medium text-gray-800">{r.date}</span>
+              <div>
+                {!r.check_in && <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">미출근</span>}
+                {r.check_in && !r.check_out && <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">근무중</span>}
+                {r.check_in && r.check_out && <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">완료</span>}
+              </div>
+            </div>
+            {session?.role === 'admin' && <p className="text-xs text-gray-500 mb-1">{r.employee_name}</p>}
+            <div className="flex gap-4 text-sm text-gray-600">
+              <span>출근 <strong className="text-green-600">{r.check_in || '-'}</strong></span>
+              <span>퇴근 <strong className="text-blue-600">{r.check_out || '-'}</strong></span>
+              <span>근무 <strong>{r.work_hours ? `${r.work_hours}h` : '-'}</strong></span>
+              {r.overtime_hours > 0 && <span className="text-orange-500">+{r.overtime_hours}h</span>}
+            </div>
+            {session?.role === 'admin' && (
+              <button onClick={() => setEditRow({ ...r })} className="text-blue-500 hover:underline text-xs mt-2">수정</button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* 데스크탑 테이블 뷰 */}
+      <div className="hidden md:block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b">
             <tr className="text-gray-600 text-left">
@@ -151,7 +183,7 @@ export default function AttendancePage() {
                 <td className="px-5 py-3 text-green-600">{r.check_in || '-'}</td>
                 <td className="px-5 py-3 text-blue-600">{r.check_out || '-'}</td>
                 <td className="px-5 py-3">{r.work_hours ? `${r.work_hours}h` : '-'}</td>
-                <td className="px-5 py-3">{r.overtime_hours > 0 ? <span className="text-green-500">{r.overtime_hours}h</span> : '-'}</td>
+                <td className="px-5 py-3">{r.overtime_hours > 0 ? <span className="text-orange-500">{r.overtime_hours}h</span> : '-'}</td>
                 <td className="px-5 py-3">
                   {!r.check_in && <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">미출근</span>}
                   {r.check_in && !r.check_out && <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">근무중</span>}
@@ -170,8 +202,8 @@ export default function AttendancePage() {
 
       {/* 수정 모달 */}
       {editRow && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-96 shadow-xl">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-xl">
             <h3 className="font-bold text-gray-800 mb-4">출퇴근 수정 — {editRow.date}</h3>
             <div className="space-y-3 mb-5">
               <div>
