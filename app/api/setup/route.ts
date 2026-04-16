@@ -39,6 +39,8 @@ export async function GET(req: NextRequest) {
         base_salary INTEGER DEFAULT 0,
         meal_allowance INTEGER DEFAULT 200000,
         is_active INTEGER DEFAULT 1,
+        break_minutes INTEGER DEFAULT 60,
+        standard_hours FLOAT8 DEFAULT 6,
         note TEXT,
         created_at TIMESTAMP DEFAULT NOW()
       )
@@ -116,6 +118,10 @@ export async function GET(req: NextRequest) {
         created_at TIMESTAMP DEFAULT NOW()
       )
     `;
+
+    // 기존 테이블에 컬럼 추가 (이미 있으면 무시)
+    await sql`ALTER TABLE employees ADD COLUMN IF NOT EXISTS break_minutes INTEGER DEFAULT 60`;
+    await sql`ALTER TABLE employees ADD COLUMN IF NOT EXISTS standard_hours FLOAT8 DEFAULT 6`;
 
     const existing = await sql`SELECT id FROM users WHERE username = 'admin'`;
     if (existing.length === 0) {

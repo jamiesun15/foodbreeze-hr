@@ -37,6 +37,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         employment_type = ${sanitizeString(d.employment_type, 20)}, hire_date = ${sanitizeString(d.hire_date, 10)},
         resign_date = ${sanitizeString(d.resign_date, 10)}, resign_reason = ${sanitizeString(d.resign_reason, 200)},
         base_salary = ${d.base_salary}, meal_allowance = ${d.meal_allowance},
+        break_minutes = ${d.break_minutes ?? 60}, standard_hours = ${d.standard_hours ?? 6},
         is_active = ${d.is_active ?? 1}, note = ${sanitizeString(d.note, 500)}
       WHERE id = ${Number(params.id)}
     `;

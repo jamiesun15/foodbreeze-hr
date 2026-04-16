@@ -75,6 +75,12 @@ export default function EditEmployeePage() {
           <Field label="식대 (원)" type="number" value={form.meal_allowance || 200000} onChange={v => set('meal_allowance', Number(v))} />
         </div>
 
+        <h2 className="font-semibold text-gray-700 mb-4 pb-2 border-b">근무 설정</h2>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <Field label="휴게시간 (분)" type="number" value={form.break_minutes ?? 60} onChange={v => set('break_minutes', Number(v))} placeholder="60" />
+          <Field label="기본 근무시간 (시간)" type="number" value={form.standard_hours ?? 6} onChange={v => set('standard_hours', Number(v))} placeholder="6" />
+        </div>
+
         <div className="flex gap-3">
           <button type="submit" disabled={loading} className="bg-green-500 hover:bg-green-800 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition disabled:opacity-50">
             {loading ? '저장 중...' : '저장'}
