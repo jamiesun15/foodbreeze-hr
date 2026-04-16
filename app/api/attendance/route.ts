@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSession, requireAdmin } from '@/lib/auth';
 import sql from '@/lib/db';
 import { calculateWorkHours, calculateOvertime } from '@/lib/tax';
+import { isValidYear, isValidMonth, isValidTime, sanitizeString, isPositiveInt } from '@/lib/validate';
 
 export async function GET(req: NextRequest) {
   const session = await getSession();
@@ -11,10 +12,16 @@ export async function GET(req: NextRequest) {
   const year = searchParams.get('year') || new Date().getFullYear().toString();
   const month = (searchParams.get('month') || String(new Date().getMonth() + 1)).padStart(2, '0');
   const employeeId = searchParams.get('employee_id');
+
+  if (!isValidYear(year) || !isValidMonth(month)) {
+    return NextResponse.json({ error: '날짜 형식이 올바르지 않습니다.' }, { status: 400 });
+  }
+
   const datePrefix = `${year}-${month}-%`;
 
   let records;
-  if (session.role === 'employee' && session.employeeId) {
+  if (session.role === 'employee') {
+    if (!session.employeeId) return NextResponse.json({ error: '직원 정보 없음' }, { status: 400 });
     records = await sql`
       SELECT a.*, e.name as employee_name, e.employee_number
       FROM attendance a JOIN employees e ON a.employee_id = e.id
@@ -46,20 +53,26 @@ export async function POST(req: NextRequest) {
 
   const data = await req.json();
   const { action, employee_id, note } = data;
+
+  if (action !== 'checkin' && action !== 'checkout') {
+    return NextResponse.json({ error: '잘못된 요청입니다.' }, { status: 400 });
+  }
+
   const empId = session.role === 'admin' ? Number(employee_id) : session.employeeId;
   if (!empId) return NextResponse.json({ error: '직원 정보 없음' }, { status: 400 });
 
   const today = new Date().toISOString().split('T')[0];
   const now = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+  const sanitizedNote = sanitizeString(note, 500);
 
   const existingRows = await sql`SELECT * FROM attendance WHERE employee_id = ${empId} AND date = ${today}`;
   const existing = existingRows[0] as any;
 
   if (action === 'checkin') {
     if (existing) {
-      await sql`UPDATE attendance SET check_in = ${now}, note = ${note || null} WHERE employee_id = ${empId} AND date = ${today}`;
+      await sql`UPDATE attendance SET check_in = ${now}, note = ${sanitizedNote} WHERE employee_id = ${empId} AND date = ${today}`;
     } else {
-      await sql`INSERT INTO attendance (employee_id, date, check_in, note) VALUES (${empId}, ${today}, ${now}, ${note || null})`;
+      await sql`INSERT INTO attendance (employee_id, date, check_in, note) VALUES (${empId}, ${today}, ${now}, ${sanitizedNote})`;
     }
   } else if (action === 'checkout') {
     if (!existing) return NextResponse.json({ error: '출근 기록이 없습니다.' }, { status: 400 });
@@ -84,6 +97,17 @@ export async function PUT(req: NextRequest) {
     const data = await req.json();
     const { id, check_in, check_out, note } = data;
 
+    if (!isPositiveInt(id)) {
+      return NextResponse.json({ error: '잘못된 요청입니다.' }, { status: 400 });
+    }
+
+    if (check_in && !isValidTime(check_in)) {
+      return NextResponse.json({ error: '출근 시간 형식이 올바르지 않습니다.' }, { status: 400 });
+    }
+    if (check_out && !isValidTime(check_out)) {
+      return NextResponse.json({ error: '퇴근 시간 형식이 올바르지 않습니다.' }, { status: 400 });
+    }
+
     let workHours = 0, overtimeHours = 0;
     if (check_in && check_out) {
       workHours = calculateWorkHours(check_in, check_out, 60);
@@ -92,7 +116,7 @@ export async function PUT(req: NextRequest) {
 
     await sql`
       UPDATE attendance SET check_in = ${check_in || null}, check_out = ${check_out || null},
-        work_hours = ${workHours}, overtime_hours = ${overtimeHours}, note = ${note || null}
+        work_hours = ${workHours}, overtime_hours = ${overtimeHours}, note = ${sanitizeString(note, 500)}
       WHERE id = ${id}
     `;
     return NextResponse.json({ success: true });

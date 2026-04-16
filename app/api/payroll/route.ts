@@ -66,8 +66,9 @@ export async function POST(req: NextRequest) {
     `;
 
     return NextResponse.json({ success: true, ...tax });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: '급여 처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }
 
@@ -102,7 +103,8 @@ export async function PUT(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, count: employees.length });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: '급여 일괄처리 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

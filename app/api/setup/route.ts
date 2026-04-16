@@ -1,12 +1,14 @@
-// 이 API는 Vercel 배포 후 딱 1번만 실행하면 됩니다.
-// 브라우저에서 /api/setup 주소를 열면 테이블이 자동으로 생성됩니다.
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import sql from '@/lib/db';
 import { hash as bcryptHash } from 'bcryptjs';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const token = req.nextUrl.searchParams.get('token');
+  if (token !== process.env.SETUP_TOKEN) {
+    return NextResponse.json({ error: '접근이 거부되었습니다.' }, { status: 403 });
+  }
+
   try {
-    // 사용자 테이블
     await sql`
       CREATE TABLE IF NOT EXISTS users (
         id BIGSERIAL PRIMARY KEY,
@@ -18,7 +20,6 @@ export async function GET() {
       )
     `;
 
-    // 직원 테이블
     await sql`
       CREATE TABLE IF NOT EXISTS employees (
         id BIGSERIAL PRIMARY KEY,
@@ -43,7 +44,6 @@ export async function GET() {
       )
     `;
 
-    // 출퇴근 테이블
     await sql`
       CREATE TABLE IF NOT EXISTS attendance (
         id BIGSERIAL PRIMARY KEY,
@@ -59,7 +59,6 @@ export async function GET() {
       )
     `;
 
-    // 급여 테이블
     await sql`
       CREATE TABLE IF NOT EXISTS payroll (
         id BIGSERIAL PRIMARY KEY,
@@ -86,7 +85,6 @@ export async function GET() {
       )
     `;
 
-    // 세금계산서 테이블
     await sql`
       CREATE TABLE IF NOT EXISTS tax_invoices (
         id BIGSERIAL PRIMARY KEY,
@@ -106,7 +104,6 @@ export async function GET() {
       )
     `;
 
-    // 거래처 테이블
     await sql`
       CREATE TABLE IF NOT EXISTS clients (
         id BIGSERIAL PRIMARY KEY,
@@ -120,10 +117,9 @@ export async function GET() {
       )
     `;
 
-    // 관리자 계정 생성 (없을 경우에만)
     const existing = await sql`SELECT id FROM users WHERE username = 'admin'`;
     if (existing.length === 0) {
-      const hash = await bcryptHash('admin1234', 10);
+      const hash = await bcryptHash('admin1234', 12);
       await sql`
         INSERT INTO users (username, password_hash, role)
         VALUES ('admin', ${hash}, 'admin')
@@ -132,11 +128,10 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      message: '데이터베이스 설정 완료! 이제 /login 으로 이동하세요.',
-      admin: 'admin / admin1234',
+      message: '데이터베이스 설정 완료! 로그인 후 반드시 비밀번호를 변경하세요.',
     });
-  } catch (e: any) {
+  } catch (e) {
     console.error(e);
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return NextResponse.json({ error: '설정 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

@@ -69,7 +69,7 @@ export default function TaxInvoicesPage() {
           <p className="text-gray-500 text-sm mt-1">사업자등록번호: 297-08-03121 | 대표: 선지명</p>
         </div>
         <button onClick={() => setShowForm(true)}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
+          className="bg-green-500 hover:bg-green-800 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
           + 발행
         </button>
       </div>
@@ -107,7 +107,7 @@ export default function TaxInvoicesPage() {
                 </td>
                 <td className="px-5 py-3 font-medium">{inv.client_name}</td>
                 <td className="px-5 py-3">{fmt(inv.supply_amount)}원</td>
-                <td className="px-5 py-3 text-orange-500">{fmt(inv.tax_amount)}원</td>
+                <td className="px-5 py-3 text-green-500">{fmt(inv.tax_amount)}원</td>
                 <td className="px-5 py-3 font-bold">{fmt(inv.total_amount)}원</td>
               </tr>
             ))}
@@ -187,12 +187,12 @@ export default function TaxInvoicesPage() {
               {/* 합계 */}
               <div className="bg-gray-50 rounded-lg p-4 text-sm space-y-1">
                 <div className="flex justify-between"><span>공급가액</span><span className="font-medium">{fmt(supplyAmount)}원</span></div>
-                {taxAmount > 0 && <div className="flex justify-between"><span>부가세 (10%)</span><span className="text-orange-500">{fmt(taxAmount)}원</span></div>}
+                {taxAmount > 0 && <div className="flex justify-between"><span>부가세 (10%)</span><span className="text-green-500">{fmt(taxAmount)}원</span></div>}
                 <div className="flex justify-between border-t pt-2 font-bold"><span>합계</span><span>{fmt(totalAmount)}원</span></div>
               </div>
 
               <div className="flex gap-3 pt-2">
-                <button type="submit" className="bg-orange-500 text-white px-6 py-2.5 rounded-lg text-sm font-medium">발행</button>
+                <button type="submit" className="bg-green-500 text-white px-6 py-2.5 rounded-lg text-sm font-medium">발행</button>
                 <button type="button" onClick={() => setShowForm(false)} className="bg-gray-100 text-gray-700 px-6 py-2.5 rounded-lg text-sm">취소</button>
               </div>
             </form>

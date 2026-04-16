@@ -23,7 +23,8 @@ export async function POST(req: NextRequest) {
       RETURNING id
     `;
     return NextResponse.json({ id: (result[0] as any).id });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: '거래처 등록 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

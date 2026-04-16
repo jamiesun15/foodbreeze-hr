@@ -61,9 +61,9 @@ export default function ReportsPage() {
           <p className="text-xs text-green-600 mb-1">총 출근일수</p>
           <p className="text-2xl font-bold text-green-700">{byEmployee.reduce((s, e) => s + e.totalDays, 0)}일</p>
         </div>
-        <div className="bg-orange-50 rounded-xl p-5 border border-orange-100">
-          <p className="text-xs text-orange-600 mb-1">총 근무시간</p>
-          <p className="text-2xl font-bold text-orange-700">{byEmployee.reduce((s, e) => s + e.totalHours, 0).toFixed(0)}h</p>
+        <div className="bg-green-50 rounded-xl p-5 border border-green-100">
+          <p className="text-xs text-green-800 mb-1">총 근무시간</p>
+          <p className="text-2xl font-bold text-green-900">{byEmployee.reduce((s, e) => s + e.totalHours, 0).toFixed(0)}h</p>
         </div>
         <div className="bg-purple-50 rounded-xl p-5 border border-purple-100">
           <p className="text-xs text-purple-600 mb-1">이번달 급여 총액</p>
@@ -97,7 +97,7 @@ export default function ReportsPage() {
                 <td className="px-5 py-3 text-gray-500">{e.department}</td>
                 <td className="px-5 py-3">{e.totalDays}일</td>
                 <td className="px-5 py-3">{e.totalHours.toFixed(1)}h</td>
-                <td className="px-5 py-3">{e.overtimeHours > 0 ? <span className="text-orange-500">{e.overtimeHours.toFixed(1)}h</span> : '-'}</td>
+                <td className="px-5 py-3">{e.overtimeHours > 0 ? <span className="text-green-500">{e.overtimeHours.toFixed(1)}h</span> : '-'}</td>
                 <td className="px-5 py-3">{e.payroll ? `${fmt(e.payroll.gross_salary)}원` : <span className="text-gray-300">미계산</span>}</td>
                 <td className="px-5 py-3 font-semibold text-green-600">{e.payroll ? `${fmt(e.payroll.net_salary)}원` : <span className="text-gray-300">미계산</span>}</td>
               </tr>

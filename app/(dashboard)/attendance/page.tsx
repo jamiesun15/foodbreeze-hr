@@ -151,7 +151,7 @@ export default function AttendancePage() {
                 <td className="px-5 py-3 text-green-600">{r.check_in || '-'}</td>
                 <td className="px-5 py-3 text-blue-600">{r.check_out || '-'}</td>
                 <td className="px-5 py-3">{r.work_hours ? `${r.work_hours}h` : '-'}</td>
-                <td className="px-5 py-3">{r.overtime_hours > 0 ? <span className="text-orange-500">{r.overtime_hours}h</span> : '-'}</td>
+                <td className="px-5 py-3">{r.overtime_hours > 0 ? <span className="text-green-500">{r.overtime_hours}h</span> : '-'}</td>
                 <td className="px-5 py-3">
                   {!r.check_in && <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">미출근</span>}
                   {r.check_in && !r.check_out && <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">근무중</span>}
@@ -191,7 +191,7 @@ export default function AttendancePage() {
               </div>
             </div>
             <div className="flex gap-3">
-              <button onClick={handleEdit} className="bg-orange-500 text-white px-5 py-2 rounded-lg text-sm font-medium">저장</button>
+              <button onClick={handleEdit} className="bg-green-500 text-white px-5 py-2 rounded-lg text-sm font-medium">저장</button>
               <button onClick={() => setEditRow(null)} className="bg-gray-100 text-gray-700 px-5 py-2 rounded-lg text-sm">취소</button>
             </div>
           </div>

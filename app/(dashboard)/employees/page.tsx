@@ -33,7 +33,7 @@ export default function EmployeesPage() {
         </div>
         <Link
           href="/employees/new"
-          className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition"
+          className="bg-green-500 hover:bg-green-800 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition"
         >
           + 직원 등록
         </Link>

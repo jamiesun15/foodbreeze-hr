@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth';
 import sql from '@/lib/db';
+import { sanitizeString } from '@/lib/validate';
 
 export async function GET() {
   try {
@@ -17,7 +18,10 @@ export async function POST(req: NextRequest) {
     await requireAdmin();
     const data = await req.json();
 
-    // 사원번호 자동 생성 (FB001, FB002 ...)
+    if (!data.name || !data.hire_date) {
+      return NextResponse.json({ error: '이름과 입사일은 필수입니다.' }, { status: 400 });
+    }
+
     const lastRows = await sql`SELECT employee_number FROM employees ORDER BY id DESC LIMIT 1`;
     let nextNum = 1;
     if (lastRows[0]) {
@@ -32,17 +36,18 @@ export async function POST(req: NextRequest) {
         emergency_contact, department, position, employment_type,
         hire_date, base_salary, meal_allowance, note
       ) VALUES (
-        ${employeeNumber}, ${data.name}, ${data.birth_date || null}, ${data.phone || null},
-        ${data.email || null}, ${data.address || null}, ${data.emergency_contact || null},
-        ${data.department || '운영팀'}, ${data.position || '사원'},
-        ${data.employment_type || '정규직'}, ${data.hire_date},
-        ${data.base_salary || 0}, ${data.meal_allowance || 200000}, ${data.note || null}
+        ${employeeNumber}, ${sanitizeString(data.name, 50)}, ${sanitizeString(data.birth_date, 10)},
+        ${sanitizeString(data.phone, 20)}, ${sanitizeString(data.email, 100)},
+        ${sanitizeString(data.address, 200)}, ${sanitizeString(data.emergency_contact, 50)},
+        ${sanitizeString(data.department, 50) || '운영팀'}, ${sanitizeString(data.position, 50) || '사원'},
+        ${sanitizeString(data.employment_type, 20) || '정규직'}, ${sanitizeString(data.hire_date, 10)},
+        ${data.base_salary || 0}, ${data.meal_allowance || 200000}, ${sanitizeString(data.note, 500)}
       ) RETURNING id
     `;
 
     return NextResponse.json({ id: (result[0] as any).id, employee_number: employeeNumber });
-  } catch (e: any) {
+  } catch (e) {
     console.error(e);
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    return NextResponse.json({ error: '직원 등록 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

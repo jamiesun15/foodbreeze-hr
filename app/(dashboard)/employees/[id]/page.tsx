@@ -69,7 +69,7 @@ export default function EditEmployeePage() {
         </div>
 
         <div className="flex gap-3">
-          <button type="submit" disabled={loading} className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition disabled:opacity-50">
+          <button type="submit" disabled={loading} className="bg-green-500 hover:bg-green-800 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition disabled:opacity-50">
             {loading ? '저장 중...' : '저장'}
           </button>
           <Link href="/employees" className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg text-sm font-medium transition">

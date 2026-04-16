@@ -39,7 +39,8 @@ export async function POST(req: NextRequest) {
     `;
 
     return NextResponse.json({ success: true, invoice_number: invoiceNumber });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: '세금계산서 발행 중 오류가 발생했습니다.' }, { status: 500 });
   }
 }

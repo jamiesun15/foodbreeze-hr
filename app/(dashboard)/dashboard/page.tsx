@@ -85,7 +85,7 @@ function StatCard({ icon, label, value, color }: { icon: string; label: string; 
   const colors: Record<string, string> = {
     blue: 'bg-blue-50 border-blue-100',
     green: 'bg-green-50 border-green-100',
-    orange: 'bg-orange-50 border-orange-100',
+    orange: 'bg-green-50 border-green-100',
     purple: 'bg-purple-50 border-purple-100',
   };
   return (

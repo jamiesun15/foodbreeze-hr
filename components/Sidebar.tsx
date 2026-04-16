@@ -21,14 +21,14 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-60 min-h-screen bg-gray-900 text-white flex flex-col">
+    <aside className="w-60 min-h-screen text-white flex flex-col" style={{ background: 'linear-gradient(180deg, #1a5c2e 0%, #1e3a2f 100%)' }}>
       {/* 회사명 */}
-      <div className="px-6 py-5 border-b border-gray-700">
+      <div className="px-6 py-5 border-b border-green-700/50">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🍃</span>
+          <img src="/logo-clean.png" alt="푸드브리즈" className="w-9 h-auto" />
           <div>
-            <p className="font-bold text-sm">푸드브리즈</p>
-            <p className="text-xs text-gray-400">HR 관리 시스템</p>
+            <p className="font-bold text-sm">Food Breeze</p>
+            <p className="text-xs text-green-300">푸드브리즈 HR</p>
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition ${
-                active ? 'bg-orange-500 text-white font-semibold' : 'text-gray-300 hover:bg-gray-800'
+                active ? 'bg-orange-500 text-white font-semibold shadow-lg' : 'text-green-100 hover:bg-green-700/50'
               }`}
             >
               <span>{item.icon}</span>
@@ -52,11 +52,20 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* 로그아웃 */}
-      <div className="px-3 pb-6">
+      {/* 하단 메뉴 */}
+      <div className="px-3 pb-6 space-y-1 border-t border-green-700/50 pt-4">
+        <Link
+          href="/change-password"
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition ${
+            pathname === '/change-password' ? 'bg-orange-500 text-white font-semibold' : 'text-green-100 hover:bg-green-700/50'
+          }`}
+        >
+          <span>🔒</span>
+          <span>비밀번호 변경</span>
+        </Link>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-gray-300 hover:bg-gray-800 transition"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-green-100 hover:bg-green-700/50 transition"
         >
           <span>🚪</span>
           <span>로그아웃</span>

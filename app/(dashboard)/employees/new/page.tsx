@@ -82,7 +82,7 @@ export default function NewEmployeePage() {
         {error && <div className="bg-red-50 text-red-600 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
 
         <div className="flex gap-3">
-          <button type="submit" disabled={loading} className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition disabled:opacity-50">
+          <button type="submit" disabled={loading} className="bg-green-500 hover:bg-green-800 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition disabled:opacity-50">
             {loading ? '등록 중...' : '직원 등록'}
           </button>
           <Link href="/employees" className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg text-sm font-medium transition">

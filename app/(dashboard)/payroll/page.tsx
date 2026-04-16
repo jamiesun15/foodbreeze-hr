@@ -49,7 +49,7 @@ export default function PayrollPage() {
           <p className="text-gray-500 text-sm mt-1">급여일: 매월 15일 | 4대보험·소득세 자동계산</p>
         </div>
         <button onClick={handleBulkCalc} disabled={bulkLoading}
-          className="bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
+          className="bg-green-500 hover:bg-green-800 disabled:opacity-50 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
           {bulkLoading ? '계산 중...' : '📊 일괄 급여 계산'}
         </button>
       </div>

@@ -9,7 +9,7 @@ export interface SessionData {
 }
 
 export const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_SECRET || 'foodbreeze-hr-secret-key-2024-change-this',
+  password: process.env.SESSION_SECRET || 'fB9xK2mQ7vL4nR8wT1pJ6hD3cY0sA5gU9eI2oW7zN4bV8xM1',
   cookieName: 'hrapp-session',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
