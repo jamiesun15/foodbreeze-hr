@@ -1,8 +1,9 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-const menu = [
+const adminMenu = [
   { href: '/dashboard', icon: '📊', label: '대시보드' },
   { href: '/employees', icon: '👥', label: '직원 관리' },
   { href: '/attendance', icon: '⏰', label: '출퇴근 관리' },
@@ -11,9 +12,24 @@ const menu = [
   { href: '/reports', icon: '📈', label: '보고서' },
 ];
 
+const employeeMenu = [
+  { href: '/attendance', icon: '⏰', label: '출퇴근' },
+];
+
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [role, setRole] = useState<string>('');
+  const [name, setName] = useState<string>('');
+
+  useEffect(() => {
+    fetch('/api/auth/me').then(r => r.json()).then(data => {
+      setRole(data.role || '');
+      setName(data.employeeName || data.username || '');
+    });
+  }, []);
+
+  const menu = role === 'admin' ? adminMenu : employeeMenu;
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' });
@@ -28,7 +44,7 @@ export default function Sidebar() {
           <img src="/logo-clean.png" alt="푸드브리즈" className="w-9 h-auto" />
           <div>
             <p className="font-bold text-sm">Food Breeze</p>
-            <p className="text-xs text-green-300">푸드브리즈 HR</p>
+            <p className="text-xs text-green-300">{name ? `${name}님` : '푸드브리즈 HR'}</p>
           </div>
         </div>
       </div>

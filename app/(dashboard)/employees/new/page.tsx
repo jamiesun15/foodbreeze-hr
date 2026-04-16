@@ -13,6 +13,7 @@ export default function NewEmployeePage() {
     emergency_contact: '', department: '운영팀', position: '사원',
     employment_type: '정규직', hire_date: '', base_salary: '',
     meal_allowance: '200000', note: '',
+    login_id: '', login_password: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -34,7 +35,7 @@ export default function NewEmployeePage() {
     setLoading(false);
 
     if (!res.ok) { setError(data.error); return; }
-    alert(`직원 등록 완료! 사원번호: ${data.employee_number}`);
+    alert(`직원 등록 완료!\n사원번호: ${data.employee_number}\n로그인 아이디: ${form.login_id}`);
     router.push('/employees');
   }
 
@@ -46,6 +47,12 @@ export default function NewEmployeePage() {
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-2xl">
+        <h2 className="font-semibold text-gray-700 mb-4 pb-2 border-b">로그인 계정</h2>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <Field label="아이디 *" value={form.login_id} onChange={v => set('login_id', v)} required placeholder="직원이 로그인할 아이디" />
+          <Field label="초기 비밀번호 *" value={form.login_password} onChange={v => set('login_password', v)} required placeholder="8자 이상" />
+        </div>
+
         <h2 className="font-semibold text-gray-700 mb-4 pb-2 border-b">기본 정보</h2>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <Field label="이름 *" value={form.name} onChange={v => set('name', v)} required />
