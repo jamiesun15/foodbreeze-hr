@@ -42,6 +42,13 @@ export default function EditEmployeePage() {
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-2xl">
+        <h2 className="font-semibold text-gray-700 mb-4 pb-2 border-b">로그인 계정</h2>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <Field label="아이디" value={form.login_id || ''} onChange={v => set('login_id', v)} placeholder="로그인 아이디" />
+          <Field label="비밀번호 변경" value={form.login_password || ''} onChange={v => set('login_password', v)} placeholder="변경 시에만 입력 (8자 이상)" />
+        </div>
+        {!form.login_id && <p className="text-sm text-orange-500 mb-4">* 아이디를 입력하면 로그인 계정이 생성됩니다.</p>}
+
         <h2 className="font-semibold text-gray-700 mb-4 pb-2 border-b">기본 정보</h2>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <Field label="이름 *" value={form.name} onChange={v => set('name', v)} required />
